@@ -1,0 +1,25 @@
+services:
+  backend:
+    build: ./backend
+    volumes:
+      - ./backend/app/logs/images:/app/logs/images
+    ports:
+      - "8000:8000"
+    networks:
+      - app_net
+    entrypoint: "uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    container_name: backend_cont
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    container_name: frontend_cont
+    networks:
+      - app_net
+    env_file:
+      - ./frontend/.env
+    entrypoint: "python app.py"
+
+networks:
+  app_net:
+    driver: bridge
